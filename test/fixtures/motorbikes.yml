@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  vehicle: one
+  brand: MyString
+  model: MyString
+  engine_cc: 1
+  has_sidecar: false
+
+two:
+  vehicle: two
+  brand: MyString
+  model: MyString
+  engine_cc: 1
+  has_sidecar: false
