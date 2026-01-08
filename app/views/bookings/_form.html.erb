@@ -1,0 +1,47 @@
+<%= form_with(model: booking, class: "contents") do |form| %>
+  <% if booking.errors.any? %>
+    <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
+      <h2><%= pluralize(booking.errors.count, "error") %> prohibited this booking from being saved:</h2>
+
+      <ul class="list-disc ml-6">
+        <% booking.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="my-5">
+    <%= form.label :vehicle_id %>
+    <%= form.text_field :vehicle_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:vehicle_id].none?, "border-red-400 focus:outline-red-600": booking.errors[:vehicle_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :customer_id %>
+    <%= form.text_field :customer_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:customer_id].none?, "border-red-400 focus:outline-red-600": booking.errors[:customer_id].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :from_date %>
+    <%= form.date_field :from_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:from_date].none?, "border-red-400 focus:outline-red-600": booking.errors[:from_date].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :to_date %>
+    <%= form.date_field :to_date, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:to_date].none?, "border-red-400 focus:outline-red-600": booking.errors[:to_date].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status %>
+    <%= form.text_field :status, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:status].none?, "border-red-400 focus:outline-red-600": booking.errors[:status].any?}] %>
+  </div>
+
+  <div class="my-5">
+    <%= form.label :status_reason %>
+    <%= form.textarea :status_reason, rows: 4, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": booking.errors[:status_reason].none?, "border-red-400 focus:outline-red-600": booking.errors[:status_reason].any?}] %>
+  </div>
+
+  <div class="inline">
+    <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
+  </div>
+<% end %>

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :bookings
   resources :vehicles
   get "home/index"
   resource :session
