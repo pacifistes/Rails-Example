@@ -1,0 +1,36 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: vehicles
+#
+#  id                 :integer          not null, primary key
+#  description        :text
+#  price_by_day       :decimal(10, 2)
+#  vehicle_type       :string
+#  year_of_production :integer
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  added_by_id        :integer          not null
+#
+# Indexes
+#
+#  index_vehicles_on_added_by_id  (added_by_id)
+#
+# Foreign Keys
+#
+#  added_by_id  (added_by_id => users.id)
+#
+one:
+  vehicle_type: MyString
+  description: MyText
+  price_by_day: 9.99
+  year_of_production: 1
+  added_by: one
+
+two:
+  vehicle_type: MyString
+  description: MyText
+  price_by_day: 9.99
+  year_of_production: 1
+  added_by: two
