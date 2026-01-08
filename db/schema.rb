@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_08_163538) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_08_163734) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -52,6 +52,17 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_163538) do
     t.index ["vehicle_id"], name: "index_cars_on_vehicle_id"
   end
 
+  create_table "motorbikes", force: :cascade do |t|
+    t.string "brand"
+    t.datetime "created_at", null: false
+    t.integer "engine_cc"
+    t.boolean "has_sidecar"
+    t.string "model"
+    t.datetime "updated_at", null: false
+    t.integer "vehicle_id", null: false
+    t.index ["vehicle_id"], name: "index_motorbikes_on_vehicle_id"
+  end
+
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "ip_address"
@@ -84,6 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_163538) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "cars", "vehicles"
+  add_foreign_key "motorbikes", "vehicles"
   add_foreign_key "sessions", "users"
   add_foreign_key "vehicles", "users", column: "added_by_id"
 end
