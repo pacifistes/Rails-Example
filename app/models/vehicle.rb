@@ -22,4 +22,8 @@
 class Vehicle < ApplicationRecord
   belongs_to :added_by, class_name: "User"
   has_many_attached :images
+
+  VEHICULE_TYPES = [ "CAR", "MOTOR_BIKE" ].freeze() # freeze allow to block the list so it put the array as a constant
+
+  validates :vehicle_type, inclusion: { in: VEHICULE_TYPES, message: "%{value} is not a valid vehicle" }
 end

@@ -21,4 +21,10 @@
 #
 class Motorbike < ApplicationRecord
   belongs_to :vehicle
+
+  BRANDS = [ "HONDA", "YAMAHA", "KAWASAKI", "DUCATI", "BMW", "HARLEY_DAVIDSON" ].freeze() # freeze allow to block the list so it put the array as a constant
+  MODELS = [ "SPORTBIKE", "CRUISER" ].freeze()
+
+  validates :brand, inclusion: { in: BRANDS, message: "%{value} is not a valid motor bike brand" }
+  validates :model, inclusion: { in: MODELS, message: "%{value} is not a valid motor bike model" }
 end
