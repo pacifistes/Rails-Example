@@ -1,0 +1,42 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+# == Schema Information
+#
+# Table name: cars
+#
+#  id         :integer          not null, primary key
+#  brand      :string
+#  engine_cc  :integer
+#  fuel_type  :string
+#  gearbox    :string
+#  model      :string
+#  seats      :integer
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  vehicle_id :integer          not null
+#
+# Indexes
+#
+#  index_cars_on_vehicle_id  (vehicle_id)
+#
+# Foreign Keys
+#
+#  vehicle_id  (vehicle_id => vehicles.id)
+#
+one:
+  vehicle: one
+  brand: MyString
+  model: MyString
+  seats: 1
+  fuel_type: MyString
+  gearbox: MyString
+  engine_cc: 1
+
+two:
+  vehicle: two
+  brand: MyString
+  model: MyString
+  seats: 1
+  fuel_type: MyString
+  gearbox: MyString
+  engine_cc: 1
