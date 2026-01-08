@@ -5,12 +5,30 @@ class SessionsController < ApplicationController
   def new
   end
 
+
   def create
-    if user = User.authenticate_by(params.permit(:email_address, :password))
-      start_new_session_for user
+    permitted_params = params.permit(:email_address, :password)
+    email = permitted_params[:email_address].to_s.strip.downcase
+    password = permitted_params[:password]
+
+    if user = User.authenticate_by(email_address: email, password: password)
+      start_new_session_for(user)
       redirect_to after_authentication_url
-    else
+    elsif user = User.find_by(email_address: email)
       redirect_to new_session_path, alert: "Try another email address or password."
+    else
+      user = User.new(
+        email_address: email,
+        password: password,
+        password_confirmation: password
+      )
+
+      if user.save
+        start_new_session_for(user)
+        redirect_to after_authentication_url
+      else
+        redirect_to new_session_path, alert: "Impossible to create account."
+      end
     end
   end
 
