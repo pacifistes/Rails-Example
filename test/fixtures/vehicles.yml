@@ -21,16 +21,16 @@
 #
 #  added_by_id  (added_by_id => users.id)
 #
-one:
-  vehicle_type: MyString
-  description: MyText
+tesla_model3_2020:
+  vehicle_type: car
+  description: "Cette voiture est une super tesla model 3"
   price_by_day: 9.99
-  year_of_production: 1
-  added_by: one
+  year_of_production: 2020
+  added_by: admin
 
-two:
-  vehicle_type: MyString
-  description: MyText
-  price_by_day: 9.99
-  year_of_production: 1
-  added_by: two
+tesla_model3_2019:
+  vehicle_type: car
+  description: "Cette voiture est une super tesla model 3"
+  price_by_day: 8.99
+  year_of_production: 2019
+  added_by: admin

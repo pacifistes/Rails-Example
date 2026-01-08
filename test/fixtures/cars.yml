@@ -24,18 +24,18 @@
 #  vehicle_id  (vehicle_id => vehicles.id)
 #
 one:
-  vehicle: one
-  brand: MyString
-  model: MyString
+  vehicle: tesla_model3_2020
+  brand: Tesla
+  model: Model3
   seats: 1
   fuel_type: MyString
   gearbox: MyString
   engine_cc: 1
 
 two:
-  vehicle: two
-  brand: MyString
-  model: MyString
+  vehicle: tesla_model3_2019
+  brand: Tesla
+  model: Model3
   seats: 1
   fuel_type: MyString
   gearbox: MyString

@@ -15,10 +15,22 @@
 #
 #  index_users_on_email_address  (email_address) UNIQUE
 #
-one:
-  email_address: one@example.com
+customer:
+  email_address: customer@gmail.com
   password_digest: <%= password_digest %>
+  role: 0
 
-two:
-  email_address: two@example.com
+admin:
+  email_address: admin@gmail.com
   password_digest: <%= password_digest %>
+  role: 1
+
+motor_bike_manager:
+  email_address: motor_bike_manager@gmail.com
+  password_digest: <%= password_digest %>
+  role: 2
+
+car_manager:
+  email_address: car_manager@gmail.com
+  password_digest: <%= password_digest %>
+  role: 3

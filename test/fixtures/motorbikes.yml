@@ -21,16 +21,16 @@
 #
 #  vehicle_id  (vehicle_id => vehicles.id)
 #
-one:
-  vehicle: one
-  brand: MyString
-  model: MyString
-  engine_cc: 1
-  has_sidecar: false
+# one:
+#   vehicle: one
+#   brand: MyString
+#   model: MyString
+#   engine_cc: 1
+#   has_sidecar: false
 
-two:
-  vehicle: two
-  brand: MyString
-  model: MyString
-  engine_cc: 1
-  has_sidecar: false
+# two:
+#   vehicle: two
+#   brand: MyString
+#   model: MyString
+#   engine_cc: 1
+#   has_sidecar: false
