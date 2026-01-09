@@ -1,6 +1,13 @@
 Rails.application.routes.draw do
   resources :bookings
-  resources :vehicles
+  resources :vehicles do
+    # Member because it's related to a single vehicle else it would be a collection
+    member do
+      get :download_json # /vehicles/:id/download_json (JSON only)
+      get :download_zip # /vehicles/:id/download_zip (JSON + images)
+      get :json_response # /vehicles/:id/json_response
+    end
+  end
   get "home/index"
   resource :session
   resources :passwords, param: :token

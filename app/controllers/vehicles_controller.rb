@@ -1,5 +1,5 @@
 class VehiclesController < ApplicationController
-  before_action :set_vehicle, only: %i[ show edit update destroy ]
+  before_action :set_vehicle, only: %i[ show edit update destroy download_json download_zip json_response ]
   before_action :authorize_create, only: %i[ new create ]
   before_action :authorize_edit, only: %i[ edit update ]
 
@@ -10,6 +10,63 @@ class VehiclesController < ApplicationController
 
   # GET /vehicles/1 or /vehicles/1.json
   def show
+  end
+
+  # GET /vehicles/1/download_json
+  def download_json
+    respond_to do |format|
+      format.json do
+        json_data = render_to_string(template: "vehicles/show", formats: [ :json ], layout: false)
+        send_data(
+          json_data,
+          filename: "vehicle_#{@vehicle.id}.json",
+          type: "application/json",
+          disposition: "attachment"
+        )
+      end
+    end
+  end
+
+  # GET /vehicles/1/download_zip
+  def download_zip
+    require "zip"
+
+    json_data = render_to_string(template: "vehicles/show", formats: [ :json ], layout: false)
+    zip_buffer = Zip::OutputStream.write_buffer do |zip|
+      # Add JSON file
+      zip.put_next_entry("vehicle_#{@vehicle.id}.json")
+      zip.write(json_data)
+
+      # Add images
+      @vehicle.images.each_with_index do |image, index|
+        begin
+          # Get the file extension from the content type or filename
+          extension = image.filename.extension_with_delimiter || ".jpg"
+          filename = "images/image_#{index + 1}#{extension}"
+
+          zip.put_next_entry(filename)
+          zip.write(image.download)
+        rescue StandardError => e
+          Rails.logger.error "Error adding image to ZIP: #{e.message}"
+          next
+        end
+      end
+    end
+
+    zip_buffer.rewind
+    send_data(
+      zip_buffer.read,
+      filename: "vehicle_#{@vehicle.id}_with_images.zip",
+      type: "application/zip",
+      disposition: "attachment"
+    )
+  end
+
+  # GET /vehicles/1/json_response
+  def json_response
+    respond_to do |format|
+      format.json { render :show }
+    end
   end
 
   # GET /vehicles/new
