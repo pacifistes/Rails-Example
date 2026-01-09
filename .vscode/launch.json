@@ -1,0 +1,28 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Rails Server",
+      "type": "rdbg",
+      "request": "launch",
+      "script": "${workspaceFolder}/bin/rails",
+      "args": [
+        "server"
+      ],
+      "askParameters": false,
+      "useBundler": true,
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "RAILS_ENV": "development"
+      }
+    }
+  ],
+  "inputs": [
+    {
+      "id": "rakeTask",
+      "description": "Rake task name",
+      "default": "routes",
+      "type": "promptString"
+    }
+  ]
+}
