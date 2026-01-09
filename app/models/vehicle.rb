@@ -22,6 +22,10 @@
 class Vehicle < ApplicationRecord
   belongs_to :added_by, class_name: "User"
   has_many_attached :images
+  has_one :car, dependent: :destroy
+  has_one :motorbike, dependent: :destroy
+
+  accepts_nested_attributes_for :car, :motorbike
 
   VEHICULE_TYPES = [ "CAR", "MOTOR_BIKE" ].freeze() # freeze allow to block the list so it put the array as a constant
 

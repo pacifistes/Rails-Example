@@ -1,4 +1,4 @@
-<%= form_with(model: vehicle, class: "contents") do |form| %>
+<%= form_with(model: vehicle, multipart: true, class: "contents") do |form| %>
   <% if vehicle.errors.any? %>
     <div id="error_explanation" class="bg-red-50 text-red-500 px-3 py-2 font-medium rounded-md mt-3">
       <h2><%= pluralize(vehicle.errors.count, "error") %> prohibited this vehicle from being saved:</h2>
@@ -13,7 +13,12 @@
 
   <div class="my-5">
     <%= form.label :vehicle_type %>
-    <%= form.text_field :vehicle_type, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": vehicle.errors[:vehicle_type].none?, "border-red-400 focus:outline-red-600": vehicle.errors[:vehicle_type].any?}] %>
+    <% if vehicle.persisted? %>
+      <%= form.text_field :vehicle_type, value: vehicle.vehicle_type, disabled: true, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full bg-gray-100", {"border-gray-400": vehicle.errors[:vehicle_type].none?, "border-red-400": vehicle.errors[:vehicle_type].any?}] %>
+      <%= form.hidden_field :vehicle_type, value: vehicle.vehicle_type %>
+    <% else %>
+      <%= form.select :vehicle_type, Vehicle::VEHICULE_TYPES, { prompt: "Select vehicle type" }, { id: "vehicle_type_select", class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": vehicle.errors[:vehicle_type].none?, "border-red-400 focus:outline-red-600": vehicle.errors[:vehicle_type].any?}] } %>
+    <% end %>
   </div>
 
   <div class="my-5">
@@ -33,15 +38,149 @@
 
   <div class="my-5">
     <%= form.label :images %>
-    <%= form.file_field :images, multiple: true, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": vehicle.errors[:images].none?, "border-red-400 focus:outline-red-600": vehicle.errors[:images].any?}] %>
+    
+    <% if vehicle.persisted? && vehicle.images.attached? %>
+      <div class="mb-4">
+        <p class="text-sm text-gray-600 mb-2">Current images:</p>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <% vehicle.images.each do |image| %>
+            <div class="relative">
+              <%= image_tag image, class: "w-full h-32 object-cover rounded-md border border-gray-300" %>
+              <div class="absolute top-2 right-2">
+                <%= check_box_tag "vehicle[image_ids_to_remove][]", image.id, false, 
+                    id: "remove_image_#{image.id}", 
+                    class: "w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500" %>
+              </div>
+              <label for="remove_image_<%= image.id %>" class="absolute inset-0 cursor-pointer"></label>
+              <div class="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white text-xs p-1 text-center rounded-b-md">
+                Click to remove
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+    
+    <div>
+      <p class="text-sm text-gray-600 mb-2"><%= vehicle.persisted? && vehicle.images.attached? ? "Add more images:" : "Upload images:" %></p>
+      <%= form.file_field :images, multiple: true, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": vehicle.errors[:images].none?, "border-red-400 focus:outline-red-600": vehicle.errors[:images].any?}] %>
+    </div>
   </div>
 
-  <div class="my-5">
-    <%= form.label :added_by_id %>
-    <%= form.text_field :added_by_id, class: ["block shadow-sm rounded-md border px-3 py-2 mt-2 w-full", {"border-gray-400 focus:outline-blue-600": vehicle.errors[:added_by_id].none?, "border-red-400 focus:outline-red-600": vehicle.errors[:added_by_id].any?}] %>
+  <!-- Car Fields -->
+  <div id="car_fields" style="display: <%= vehicle.vehicle_type == 'CAR' ? 'block' : 'none' %>;">
+    <h2 class="font-bold text-2xl mt-6 mb-4">Car Details</h2>
+    
+    <%= form.fields_for :car, (vehicle.vehicle_type == 'CAR' ? (vehicle.car || vehicle.build_car) : vehicle.build_car) do |car_form| %>
+      <div class="my-5">
+        <%= car_form.label :brand %>
+        <%= car_form.select :brand, Car::BRANDS, { prompt: "Select brand" }, { class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" } %>
+      </div>
+
+      <div class="my-5">
+        <%= car_form.label :model %>
+        <%= car_form.select :model, Car::MODELS, { prompt: "Select model" }, { class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" } %>
+      </div>
+
+      <div class="my-5">
+        <%= car_form.label :engine_cc %>
+        <%= car_form.number_field :engine_cc, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      </div>
+
+      <div class="my-5">
+        <%= car_form.label :fuel_type %>
+        <%= car_form.select :fuel_type, Car::FUEL_TYPES, { prompt: "Select fuel type" }, { class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" } %>
+      </div>
+
+      <div class="my-5">
+        <%= car_form.label :gearbox %>
+        <%= car_form.select :gearbox, Car::GEARBOXS, { prompt: "Select gearbox" }, { class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" } %>
+      </div>
+
+      <div class="my-5">
+        <%= car_form.label :seats %>
+        <%= car_form.number_field :seats, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Motorbike Fields -->
+  <div id="motorbike_fields" style="display: <%= vehicle.vehicle_type == 'MOTOR_BIKE' ? 'block' : 'none' %>;">
+    <h2 class="font-bold text-2xl mt-6 mb-4">Motorbike Details</h2>
+    
+    <%= form.fields_for :motorbike, (vehicle.vehicle_type == 'MOTOR_BIKE' ? (vehicle.motorbike || vehicle.build_motorbike) : vehicle.build_motorbike) do |motorbike_form| %>
+      <div class="my-5">
+        <%= motorbike_form.label :brand %>
+        <%= motorbike_form.select :brand, Motorbike::BRANDS, { prompt: "Select brand" }, { class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" } %>
+      </div>
+
+      <div class="my-5">
+        <%= motorbike_form.label :model %>
+        <%= motorbike_form.select :model, Motorbike::MODELS, { prompt: "Select model" }, { class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" } %>
+      </div>
+
+      <div class="my-5">
+        <%= motorbike_form.label :engine_cc %>
+        <%= motorbike_form.number_field :engine_cc, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2 w-full" %>
+      </div>
+
+      <div class="my-5">
+        <%= motorbike_form.label :has_sidecar %>
+        <%= motorbike_form.check_box :has_sidecar, class: "block shadow-sm rounded-md border border-gray-400 focus:outline-blue-600 px-3 py-2 mt-2" %>
+      </div>
+    <% end %>
   </div>
 
   <div class="inline">
     <%= form.submit class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white inline-block font-medium cursor-pointer" %>
   </div>
 <% end %>
+
+<script>
+  (function() {
+    function toggleVehicleFields() {
+      const vehicleTypeSelect = document.getElementById('vehicle_type_select');
+      const carFields = document.getElementById('car_fields');
+      const motorbikeFields = document.getElementById('motorbike_fields');
+
+      if (!carFields || !motorbikeFields) return;
+
+      function toggleFields(vehicleType) {
+        if (vehicleType === 'CAR') {
+          carFields.style.display = 'block';
+          motorbikeFields.style.display = 'none';
+        } else if (vehicleType === 'MOTOR_BIKE') {
+          carFields.style.display = 'none';
+          motorbikeFields.style.display = 'block';
+        } else {
+          carFields.style.display = 'none';
+          motorbikeFields.style.display = 'none';
+        }
+      }
+
+      if (vehicleTypeSelect) {
+        // Set initial state based on selected value
+        toggleFields(vehicleTypeSelect.value);
+        
+        // Listen for changes
+        vehicleTypeSelect.addEventListener('change', function() {
+          toggleFields(this.value);
+        });
+      } else {
+        // In edit mode, vehicle type is disabled, so set based on current value
+        const vehicleTypeField = document.querySelector('input[name="vehicle[vehicle_type]"]:not([type="hidden"])');
+        if (vehicleTypeField) {
+          toggleFields(vehicleTypeField.value);
+        }
+      }
+    }
+
+    // Run on DOMContentLoaded
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', toggleVehicleFields);
+    } else {
+      // DOM is already loaded
+      toggleVehicleFields();
+    }
+  })();
+</script>
