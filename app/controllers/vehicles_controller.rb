@@ -1,5 +1,7 @@
 class VehiclesController < ApplicationController
   before_action :set_vehicle, only: %i[ show edit update destroy ]
+  before_action :authorize_create, only: %i[ new create ]
+  before_action :authorize_edit, only: %i[ edit update ]
 
   # GET /vehicles or /vehicles.json
   def index
@@ -108,6 +110,55 @@ class VehiclesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_vehicle
       @vehicle = Vehicle.find(params.expect(:id))
+    end
+
+    # Authorization methods
+    def authorize_create
+      # Check general permission
+      unless Current.user&.admin? || Current.user&.car_manager? || Current.user&.motor_bike_manager?
+        redirect_to vehicles_path, alert: "You don't have permission to create vehicles."
+        return
+      end
+
+      # For create action, also check vehicle type permission
+      if action_name == "create"
+        vehicle_type = params.dig(:vehicle, :vehicle_type)
+        unless can_manage_vehicle_type?(vehicle_type)
+          respond_to do |format|
+            format.html { redirect_to vehicles_path, alert: "You don't have permission to create this type of vehicle." }
+            format.json { render json: { error: "You don't have permission to create this type of vehicle." }, status: :forbidden }
+          end
+        end
+      end
+    end
+
+    def authorize_edit
+      # Check general permission
+      unless Current.user&.admin? || Current.user&.car_manager? || Current.user&.motor_bike_manager?
+        redirect_to vehicles_path, alert: "You don't have permission to edit vehicles."
+        return
+      end
+
+      # Check vehicle type permission
+      unless can_manage_vehicle_type?(@vehicle.vehicle_type)
+        respond_to do |format|
+          format.html { redirect_to @vehicle, alert: "You don't have permission to edit this type of vehicle." }
+          format.json { render json: { error: "You don't have permission to edit this type of vehicle." }, status: :forbidden }
+        end
+      end
+    end
+
+    def can_manage_vehicle_type?(vehicle_type)
+      return false unless Current.user
+
+      case vehicle_type
+      when "CAR"
+        Current.user.admin? || Current.user.car_manager?
+      when "MOTOR_BIKE"
+        Current.user.admin? || Current.user.motor_bike_manager?
+      else
+        false
+      end
     end
 
     # Only allow a list of trusted parameters through.
