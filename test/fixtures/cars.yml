@@ -23,20 +23,29 @@
 #
 #  vehicle_id  (vehicle_id => vehicles.id)
 #
-one:
+tesla_model3_2020_car:
   vehicle: tesla_model3_2020
-  brand: Tesla
-  model: Model3
-  seats: 1
-  fuel_type: MyString
-  gearbox: MyString
-  engine_cc: 1
+  brand: TESLA
+  model: MODEL_3
+  seats: 5
+  fuel_type: ELECTRIC
+  gearbox: AUTOMATIC
+  engine_cc: 0
 
-two:
+tesla_model3_2019_car:
   vehicle: tesla_model3_2019
-  brand: Tesla
-  model: Model3
-  seats: 1
-  fuel_type: MyString
-  gearbox: MyString
-  engine_cc: 1
+  brand: TESLA
+  model: MODEL_3
+  seats: 5
+  fuel_type: ELECTRIC
+  gearbox: AUTOMATIC
+  engine_cc: 0
+
+mercedes_sedan_2021_car:
+  vehicle: mercedes_sedan_2021
+  brand: MERCEDES
+  model: MODEL_S
+  seats: 5
+  fuel_type: PETROL
+  gearbox: AUTOMATIC
+  engine_cc: 2000

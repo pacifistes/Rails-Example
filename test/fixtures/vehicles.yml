@@ -22,15 +22,36 @@
 #  added_by_id  (added_by_id => users.id)
 #
 tesla_model3_2020:
-  vehicle_type: car
-  description: "Cette voiture est une super tesla model 3"
-  price_by_day: 9.99
+  vehicle_type: CAR
+  description: "This is a great Tesla Model 3 electric car"
+  price_by_day: 99.99
   year_of_production: 2020
-  added_by: admin
+  added_by: car_manager
 
 tesla_model3_2019:
-  vehicle_type: car
-  description: "Cette voiture est une super tesla model 3"
-  price_by_day: 8.99
+  vehicle_type: CAR
+  description: "This is a great Tesla Model 3 electric car"
+  price_by_day: 89.99
   year_of_production: 2019
-  added_by: admin
+  added_by: car_manager
+
+mercedes_sedan_2021:
+  vehicle_type: CAR
+  description: "Luxury Mercedes sedan with premium features"
+  price_by_day: 149.99
+  year_of_production: 2021
+  added_by: car_manager
+
+honda_sportbike_2022:
+  vehicle_type: MOTOR_BIKE
+  description: "Fast and agile Honda sportbike"
+  price_by_day: 59.99
+  year_of_production: 2022
+  added_by: motor_bike_manager
+
+yamaha_cruiser_2021:
+  vehicle_type: MOTOR_BIKE
+  description: "Comfortable Yamaha cruiser for long rides"
+  price_by_day: 69.99
+  year_of_production: 2021
+  added_by: motor_bike_manager
