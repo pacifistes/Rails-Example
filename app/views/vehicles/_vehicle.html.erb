@@ -15,14 +15,75 @@
     <strong class="block font-medium mb-1">Year of production:</strong>
     <%= vehicle.year_of_production %>
   </div>
+
+  <% if vehicle.vehicle_type == "CAR" %>
+    <% car = Car.find_by(vehicle_id: vehicle.id) %>
+    <% if car %>
+      <div class="border-t pt-3 mt-3">
+        <h3 class="font-semibold text-lg mb-2">Car Details</h3>
+        <div>
+          <strong class="block font-medium mb-1">Brand:</strong>
+          <%= car.brand %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Model:</strong>
+          <%= car.model %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Engine CC:</strong>
+          <%= car.engine_cc %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Fuel type:</strong>
+          <%= car.fuel_type %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Gearbox:</strong>
+          <%= car.gearbox %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Seats:</strong>
+          <%= car.seats %>
+        </div>
+      </div>
+    <% end %>
+  <% elsif vehicle.vehicle_type == "MOTOR_BIKE" %>
+    <% motorbike = Motorbike.find_by(vehicle_id: vehicle.id) %>
+    <% if motorbike %>
+      <div class="border-t pt-3 mt-3">
+        <h3 class="font-semibold text-lg mb-2">Motorbike Details</h3>
+        <div>
+          <strong class="block font-medium mb-1">Brand:</strong>
+          <%= motorbike.brand %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Model:</strong>
+          <%= motorbike.model %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Engine CC:</strong>
+          <%= motorbike.engine_cc %>
+        </div>
+        <div>
+          <strong class="block font-medium mb-1">Has sidecar:</strong>
+          <%= motorbike.has_sidecar ? "Yes" : "No" %>
+        </div>
+      </div>
+    <% end %>
+  <% end %>
+
   <div>
     <strong class="block font-medium mb-1">Images:</strong>
-    <% vehicle.images.each do |image| %>
-      <div><%= link_to image.filename, image, class: "text-gray-700 underline hover:no-underline" %></div>
+    <% if vehicle.images.any? %>
+      <% vehicle.images.each do |image| %>
+        <div><%= link_to image.filename, image, class: "text-gray-700 underline hover:no-underline" %></div>
+      <% end %>
+    <% else %>
+      <span class="text-gray-500">No images</span>
     <% end %>
   </div>
   <div>
     <strong class="block font-medium mb-1">Added by:</strong>
-    <%= vehicle.added_by_id %>
+    <%= vehicle.added_by&.email_address || vehicle.added_by_id %>
   </div>
 </div>
