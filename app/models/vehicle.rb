@@ -4,9 +4,9 @@
 #
 #  id                 :integer          not null, primary key
 #  description        :text
-#  price_by_day       :decimal(10, 2)
-#  vehicle_type       :string
-#  year_of_production :integer
+#  price_by_day       :decimal(10, 2)   not null
+#  vehicle_type       :string           not null
+#  year_of_production :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  added_by_id        :integer          not null
@@ -29,7 +29,11 @@ class Vehicle < ApplicationRecord
 
   VEHICULE_TYPES = [ "CAR", "MOTOR_BIKE" ].freeze() # freeze allow to block the list so it put the array as a constant
 
-  validates :vehicle_type, inclusion: { in: VEHICULE_TYPES, message: "%{value} is not a valid vehicle" }
+  validates :vehicle_type, presence: true, inclusion: { in: VEHICULE_TYPES, message: "%{value} is not a valid vehicle" }
+  validates :price_by_day, presence: true
+  validates :year_of_production, presence: true
+
+  include Validators::VehicleValidator
 
   # Scopes for filtering
   scope :filter_by_vehicle_type, ->(types) {
@@ -100,7 +104,7 @@ class Vehicle < ApplicationRecord
 
   # Paginate vehicles collection
   def self.paginate_collection(vehicles, page: 1, per_page: 5)
-    page = [page.to_i, 1].max
+    page = [ page.to_i, 1 ].max
     total_count = vehicles.count
     total_pages = (total_count.to_f / per_page).ceil
     offset = (page - 1) * per_page

@@ -3,12 +3,12 @@
 # Table name: cars
 #
 #  id         :integer          not null, primary key
-#  brand      :string
-#  engine_cc  :integer
-#  fuel_type  :string
-#  gearbox    :string
-#  model      :string
-#  seats      :integer
+#  brand      :string           not null
+#  engine_cc  :integer          not null
+#  fuel_type  :string           not null
+#  gearbox    :string           not null
+#  model      :string           not null
+#  seats      :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  vehicle_id :integer          not null

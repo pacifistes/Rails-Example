@@ -6,9 +6,9 @@
 #
 #  id                 :integer          not null, primary key
 #  description        :text
-#  price_by_day       :decimal(10, 2)
-#  vehicle_type       :string
-#  year_of_production :integer
+#  price_by_day       :decimal(10, 2)   not null
+#  vehicle_type       :string           not null
+#  year_of_production :integer          not null
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  added_by_id        :integer          not null

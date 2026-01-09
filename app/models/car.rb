@@ -3,12 +3,12 @@
 # Table name: cars
 #
 #  id         :integer          not null, primary key
-#  brand      :string
-#  engine_cc  :integer
-#  fuel_type  :string
-#  gearbox    :string
-#  model      :string
-#  seats      :integer
+#  brand      :string           not null
+#  engine_cc  :integer          not null
+#  fuel_type  :string           not null
+#  gearbox    :string           not null
+#  model      :string           not null
+#  seats      :integer          not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  vehicle_id :integer          not null
@@ -25,12 +25,18 @@ class Car < ApplicationRecord
   belongs_to :vehicle
 
   BRANDS = [ "TESLA", "MERCEDES" ].freeze() # freeze allow to block the list so it put the array as a constant
-  MODELS = [ "MODEL_S", "MODEL_3", "MODEL_X", "MODEL_Y", "ROADSTER" ].freeze()
+  TESLA_MODELS = %w[MODEL_S MODEL_3 MODEL_X MODEL_Y CYBERTRUCK ROADSTER].freeze
+  MERCEDES_MODELS = %w[A_CLASS C_CLASS E_CLASS S_CLASS G_CLASS GLC GLE AMG_GT].freeze
+  MODELS = (TESLA_MODELS + MERCEDES_MODELS).freeze()
   GEARBOXS = [ "MANUAL", "AUTOMATIC" ].freeze()
   FUEL_TYPES = [ "PETROL", "DIESEL", "ELECTRIC" ].freeze()
 
-  validates :brand, inclusion: { in: BRANDS, message: "%{value} is not a valid motor bike brand" }
-  validates :model, inclusion: { in: MODELS, message: "%{value} is not a valid motor bike model" }
-  validates :gearbox, inclusion: { in: GEARBOXS, message: "%{value} is not a valid motor bike gearbox" }
-  validates :fuel_type, inclusion: { in: FUEL_TYPES, message: "%{value} is not a valid motor bike fuel type" }
+  validates :brand, presence: true, inclusion: { in: BRANDS, message: "%{value} is not a valid car brand" }
+  validates :model, presence: true, inclusion: { in: MODELS, message: "%{value} is not a valid car model" }
+  validates :gearbox, presence: true, inclusion: { in: GEARBOXS, message: "%{value} is not a valid car gearbox" }
+  validates :fuel_type, presence: true, inclusion: { in: FUEL_TYPES, message: "%{value} is not a valid car fuel type" }
+  validates :engine_cc, presence: true
+  validates :seats, presence: true
+
+  include Validators::CarValidator
 end

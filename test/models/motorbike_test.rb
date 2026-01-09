@@ -3,10 +3,10 @@
 # Table name: motorbikes
 #
 #  id          :integer          not null, primary key
-#  brand       :string
-#  engine_cc   :integer
-#  has_sidecar :boolean
-#  model       :string
+#  brand       :string           not null
+#  engine_cc   :integer          not null
+#  has_sidecar :boolean          default(FALSE), not null
+#  model       :string           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #  vehicle_id  :integer          not null

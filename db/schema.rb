@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_01_08_163921) do
+ActiveRecord::Schema[8.1].define(version: 2026_01_09_192236) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.bigint "blob_id", null: false
     t.datetime "created_at", null: false
@@ -53,24 +53,24 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_163921) do
   end
 
   create_table "cars", force: :cascade do |t|
-    t.string "brand"
+    t.string "brand", null: false
     t.datetime "created_at", null: false
-    t.integer "engine_cc"
-    t.string "fuel_type"
-    t.string "gearbox"
-    t.string "model"
-    t.integer "seats"
+    t.integer "engine_cc", null: false
+    t.string "fuel_type", null: false
+    t.string "gearbox", null: false
+    t.string "model", null: false
+    t.integer "seats", null: false
     t.datetime "updated_at", null: false
     t.integer "vehicle_id", null: false
     t.index ["vehicle_id"], name: "index_cars_on_vehicle_id"
   end
 
   create_table "motorbikes", force: :cascade do |t|
-    t.string "brand"
+    t.string "brand", null: false
     t.datetime "created_at", null: false
-    t.integer "engine_cc"
-    t.boolean "has_sidecar"
-    t.string "model"
+    t.integer "engine_cc", null: false
+    t.boolean "has_sidecar", default: false, null: false
+    t.string "model", null: false
     t.datetime "updated_at", null: false
     t.integer "vehicle_id", null: false
     t.index ["vehicle_id"], name: "index_motorbikes_on_vehicle_id"
@@ -98,10 +98,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_01_08_163921) do
     t.integer "added_by_id", null: false
     t.datetime "created_at", null: false
     t.text "description"
-    t.decimal "price_by_day", precision: 10, scale: 2
+    t.decimal "price_by_day", precision: 10, scale: 2, null: false
     t.datetime "updated_at", null: false
-    t.string "vehicle_type"
-    t.integer "year_of_production"
+    t.string "vehicle_type", null: false
+    t.integer "year_of_production", null: false
     t.index ["added_by_id"], name: "index_vehicles_on_added_by_id"
   end
 
