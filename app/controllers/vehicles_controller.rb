@@ -5,7 +5,17 @@ class VehiclesController < ApplicationController
 
   # GET /vehicles or /vehicles.json
   def index
-    @vehicles = Vehicle.all
+    filter_params_hash = filter_params.to_h
+    vehicles = Vehicle.includes(:car, :motorbike, :added_by)
+                      .apply_filters(filter_params_hash)
+
+    pagination_result = Vehicle.paginate_collection(vehicles, page: params[:page], per_page: 5)
+    @vehicles = pagination_result[:vehicles]
+    @current_page = pagination_result[:current_page]
+    @total_pages = pagination_result[:total_pages]
+    @total_count = pagination_result[:total_count]
+
+    @filter_params = filter_params_hash
   end
 
   # GET /vehicles/1 or /vehicles/1.json
@@ -221,5 +231,9 @@ class VehiclesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def vehicle_params
       params.expect(vehicle: [ :vehicle_type, :description, :price_by_day, :year_of_production, images: [], car_attributes: [ :id, :brand, :model, :engine_cc, :fuel_type, :gearbox, :seats ], motorbike_attributes: [ :id, :brand, :model, :engine_cc, :has_sidecar ] ])
+    end
+
+    def filter_params
+      params.permit(:vehicle_type, :brand, :model, :min_price, :max_price, :min_year, :max_year, :fuel_type, :gearbox, :commit, vehicle_type: [], brand: [], model: [], fuel_type: [], gearbox: [])
     end
 end

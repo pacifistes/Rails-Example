@@ -5,11 +5,20 @@
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-md inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <div class="flex justify-between items-center">
+  <div class="flex justify-between items-center mb-6">
     <h1 class="font-bold text-4xl">Vehicles</h1>
     <%= link_to "New vehicle", new_vehicle_path, class: "rounded-md px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white block font-medium" %>
   </div>
 
+  <!-- Filters -->
+  <%= render "filters" %>
+
+  <!-- Results count -->
+  <div class="mb-4 text-sm text-gray-600">
+    <%= pluralize(@total_count, "vehicle") %> found
+  </div>
+
+  <!-- Vehicles list -->
   <div id="vehicles" class="min-w-full divide-y divide-gray-200 space-y-5">
     <% if @vehicles.any? %>
       <% @vehicles.each do |vehicle| %>
@@ -26,4 +35,30 @@
       <p class="text-center my-10">No vehicles found.</p>
     <% end %>
   </div>
+
+  <!-- Pagination -->
+  <% if @total_pages > 1 %>
+    <div class="mt-6 flex justify-center items-center gap-2">
+      <% if @current_page > 1 %>
+        <% pagination_params = @filter_params.dup %>
+        <% pagination_params[:page] = @current_page - 1 %>
+        <%= link_to "← Previous", vehicles_path(pagination_params), class: "px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium" %>
+      <% else %>
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">← Previous</span>
+      <% end %>
+
+      <span class="px-4 py-2 text-gray-700">
+        Page <%= @current_page %> of <%= @total_pages %>
+      </span>
+
+      <% if @current_page < @total_pages %>
+        <% pagination_params = @filter_params.dup %>
+        <% pagination_params[:page] = @current_page + 1 %>
+        <%= link_to "Next →", vehicles_path(pagination_params), class: "px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium" %>
+      <% else %>
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">Next →</span>
+      <% end %>
+    </div>
+  <% end %>
 </div>
+
