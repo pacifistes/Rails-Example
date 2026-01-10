@@ -8,6 +8,7 @@ class VehiclesController < ApplicationController
     filter_params_hash = filter_params.to_h
     vehicles = Vehicle.includes(:car, :motorbike, :added_by)
                       .apply_filters(filter_params_hash)
+                      .order(created_at: :desc)
 
     pagination_result = Vehicle.paginate_collection(vehicles, page: params[:page], per_page: 5)
     @vehicles = pagination_result[:vehicles]

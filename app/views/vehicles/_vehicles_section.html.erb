@@ -1,0 +1,61 @@
+<% 
+  # Si les données sont passées en locals (depuis le contrôleur), on les utilise
+  # Sinon, on les récupère directement (pour le broadcast depuis le modèle)
+  if local_assigns[:vehicles_list]
+    vehicles_list = local_assigns[:vehicles_list]
+    current_page = local_assigns[:current_page] || 1
+    total_pages = local_assigns[:total_pages] || 1
+    total_count = local_assigns[:total_count] || Vehicle.count
+    filter_params = local_assigns[:filter_params] || {}
+  else
+    # Récupération directe pour le broadcast (sans filtres, page 1)
+    vehicles = Vehicle.includes(:car, :motorbike, :added_by).order(created_at: :desc)
+    pagination_result = Vehicle.paginate_collection(vehicles, page: 1, per_page: 5)
+    vehicles_list = pagination_result[:vehicles]
+    current_page = pagination_result[:current_page]
+    total_pages = pagination_result[:total_pages]
+    total_count = pagination_result[:total_count]
+    filter_params = {}
+  end
+%>
+
+<!-- Results count -->
+<div id="vehicles-count" class="mb-4 text-sm text-gray-600">
+  <%= pluralize(total_count, "vehicle") %> found
+</div>
+
+<!-- Vehicles list -->
+<div id="vehicles" class="min-w-full divide-y divide-gray-200 space-y-5">
+  <% if vehicles_list.any? %>
+    <% vehicles_list.each do |vehicle| %>
+      <%= render partial: "vehicles/vehicle_list_item", locals: { vehicle: vehicle } %>
+    <% end %>
+  <% else %>
+    <p class="text-center my-10" id="no-vehicles-message">No vehicles found.</p>
+  <% end %>
+</div>
+
+<!-- Pagination -->
+<div id="vehicles-pagination">
+  <% if total_pages > 1 %>
+    <div class="mt-6 flex justify-center items-center gap-2">
+      <% if current_page > 1 %>
+        <% pagination_params = filter_params.merge(page: current_page - 1) %>
+        <%= link_to "← Previous", vehicles_path(pagination_params), class: "px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium" %>
+      <% else %>
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">← Previous</span>
+      <% end %>
+
+      <span class="px-4 py-2 text-gray-700">
+        Page <%= current_page %> of <%= total_pages %>
+      </span>
+
+      <% if current_page < total_pages %>
+        <% pagination_params = filter_params.merge(page: current_page + 1) %>
+        <%= link_to "Next →", vehicles_path(pagination_params), class: "px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium" %>
+      <% else %>
+        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">Next →</span>
+      <% end %>
+    </div>
+  <% end %>
+</div>

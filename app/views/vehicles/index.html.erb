@@ -1,5 +1,7 @@
 <% content_for :title, "Vehicles" %>
 
+<%= turbo_stream_from "vehicles" %>
+
 <div class="w-full">
   <div class="flex justify-between items-center mb-6">
     <h1 class="font-bold text-4xl">Vehicles</h1>
@@ -9,52 +11,14 @@
   <!-- Filters -->
   <%= render "filters" %>
 
-  <!-- Results count -->
-  <div class="mb-4 text-sm text-gray-600">
-    <%= pluralize(@total_count, "vehicle") %> found
+  <!-- Vehicles section (will be replaced via Turbo Streams) -->
+  <div id="vehicles-section">
+    <%= render "vehicles_section", 
+        vehicles_list: @vehicles, 
+        current_page: @current_page, 
+        total_pages: @total_pages, 
+        total_count: @total_count,
+        filter_params: @filter_params %>
   </div>
-
-  <!-- Vehicles list -->
-  <div id="vehicles" class="min-w-full divide-y divide-gray-200 space-y-5">
-    <% if @vehicles.any? %>
-      <% @vehicles.each do |vehicle| %>
-        <div class="flex flex-col sm:flex-row justify-between items-center pb-5 sm:pb-0">
-          <%= render vehicle %>
-          <div class="w-full sm:w-auto flex flex-col sm:flex-row space-x-2 space-y-2">
-            <%= link_to "Show", vehicle, class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= link_to "Edit", edit_vehicle_path(vehicle), class: "w-full sm:w-auto text-center rounded-md px-3.5 py-2.5 bg-gray-100 hover:bg-gray-50 inline-block font-medium" %>
-            <%= button_to "Destroy", vehicle, method: :delete, class: "w-full sm:w-auto rounded-md px-3.5 py-2.5 text-white bg-red-600 hover:bg-red-500 font-medium cursor-pointer", data: { turbo_confirm: "Are you sure?" } %>
-          </div>
-        </div>
-      <% end %>
-    <% else %>
-      <p class="text-center my-10">No vehicles found.</p>
-    <% end %>
-  </div>
-
-  <!-- Pagination -->
-  <% if @total_pages > 1 %>
-    <div class="mt-6 flex justify-center items-center gap-2">
-      <% if @current_page > 1 %>
-        <% pagination_params = @filter_params.dup %>
-        <% pagination_params[:page] = @current_page - 1 %>
-        <%= link_to "← Previous", vehicles_path(pagination_params), class: "px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium" %>
-      <% else %>
-        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">← Previous</span>
-      <% end %>
-
-      <span class="px-4 py-2 text-gray-700">
-        Page <%= @current_page %> of <%= @total_pages %>
-      </span>
-
-      <% if @current_page < @total_pages %>
-        <% pagination_params = @filter_params.dup %>
-        <% pagination_params[:page] = @current_page + 1 %>
-        <%= link_to "Next →", vehicles_path(pagination_params), class: "px-4 py-2 bg-gray-200 text-gray-700 rounded-md hover:bg-gray-300 font-medium" %>
-      <% else %>
-        <span class="px-4 py-2 bg-gray-100 text-gray-400 rounded-md cursor-not-allowed">Next →</span>
-      <% end %>
-    </div>
-  <% end %>
 </div>
 

@@ -118,4 +118,43 @@ class Vehicle < ApplicationRecord
       per_page: per_page
     }
   end
+
+  # Turbo Streams callbacks for real-time updates
+  after_create_commit :broadcast_vehicle_created
+  after_update_commit :broadcast_vehicle_updated
+  after_destroy_commit :broadcast_vehicle_destroyed
+
+  private
+
+    def broadcast_vehicle_created
+      # Reload entire vehicles section using ApplicationController.render
+      reload_vehicles_section
+    end
+
+    def broadcast_vehicle_updated
+      # Replace the updated vehicle item
+      broadcast_replace_to(
+        "vehicles",
+        target: dom_id(self, :list_item),
+        partial: "vehicles/vehicle_list_item",
+        locals: { vehicle: self }
+      )
+    end
+
+    def broadcast_vehicle_destroyed
+      # Reload entire vehicles section using ApplicationController.render
+      reload_vehicles_section
+    end
+
+    def reload_vehicles_section
+      # Render turbo_stream template using VehiclesController context
+      turbo_stream_content = VehiclesController.render(
+        template: "vehicles/reload",
+        formats: [ :turbo_stream ],
+        layout: false
+      )
+
+      # Broadcast via Action Cable
+      ActionCable.server.broadcast("vehicles", turbo_stream_content)
+    end
 end
